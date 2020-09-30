@@ -1,0 +1,28 @@
+<h3>User List</h3>
+
+<div>
+  <label>Name</label>
+  <input [(ngModel)]="searchName" />
+</div>
+<div>
+  <label>Email</label>
+  <input [(ngModel)]="searchEmail" />
+</div>
+<div>
+  <label>Address</label>
+  <input [(ngModel)]="searchAddress" />
+</div>
+<table ng-controller="FilterController as filterCtrl">
+  <tr>
+    <th>Name and username</th>
+    <th>Email</th>
+    <th>Address</th>
+    <th></th>
+  </tr>
+  <tr *ngFor="let l of user | search:searchName:searchEmail:searchAddress">
+    <td>{{l?.name}} ({{l?.username}})</td>
+    <td>{{l?.email}}</td>
+    <td>{{l?.address?.zipcode}} {{l?.address?.city}} {{l?.address?.street}} {{l?.address?.suite}}</td>
+    <td><button mat-button (click)="onShow()">Open</button></td>
+  </tr>
+</table>
