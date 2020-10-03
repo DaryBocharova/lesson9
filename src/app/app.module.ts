@@ -6,17 +6,20 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ModalComponent } from './modal.component';
 import { FormsModule } from '@angular/forms';
-import { SearchPipe } from './search.pipe';
-import { MatDialogModule } from '@angular/material/dialog';
+import {MatButtonModule} from '@angular/material/button';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatTableModule} from '@angular/material/table';
 
 @NgModule({
-  declarations: [AppComponent, ModalComponent, SearchPipe],
+  declarations: [AppComponent, ModalComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
     BrowserAnimationsModule,
     MatDialogModule,
     FormsModule,
+    MatButtonModule,
+    MatTableModule
   ],
   providers: [HttpClient, SearchService],
   bootstrap: [AppComponent],

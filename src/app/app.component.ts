@@ -1,32 +1,75 @@
 import { Component, OnInit } from '@angular/core';
 import { SearchService } from './search.service';
-import { ModalComponent, ModalData } from './modal.component';
+import { ModalComponent } from './modal.component';
 import { MatDialog } from '@angular/material/dialog';
 
+export interface User {
+  'id': number;
+  'name': string;
+  'username': string;
+  'email': string;
+  'address': {
+    'street': string,
+    'suite': string,
+    'city': string,
+    'zipcode': string,
+    'geo': {
+      'lat': string,
+      'lng': string
+    }
+  };
+}
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit {
-  user: any;
-  searchName = '';
-  searchEmail = '';
-  searchAddress = '';
+  fullUserList: User[];
+  searchFields = {
+    name: '',
+    email: '',
+    address: ''
+  };
 
-  constructor(public searchService: SearchService, public dialog: MatDialog) {
+  constructor(public searchService: SearchService, public dialog: MatDialog) {}
+
+  ngOnInit() {
     this.searchService.getData().subscribe((data) => {
-      this.user = data;
-      console.log( this.user);
+      this.fullUserList = data;
     });
   }
 
-  ngOnInit() {
+  get userList(): User[] {
+    let userlist = this.fullUserList;
+    if (this.searchFields.name) {
+      const searchString = this.searchFields.name;
+      userlist = userlist.filter((item) =>
+        item.name.includes(searchString) ||
+        item.username.includes(searchString));
+    }
+    if (this.searchFields.email) {
+      userlist = userlist.filter((item) => item.email.includes(this.searchFields.email));
+    }
+    if (this.searchFields.address) {
+      const searchString = this.searchFields.address;
+      userlist = userlist.filter((item) =>
+        item.address.zipcode.includes(searchString) ||
+        item.address.city.includes(searchString) ||
+        item.address.suite.includes(searchString) ||
+        item.address.street.includes(searchString)
+      );
+    }
+    return userlist;
   }
 
-  onShow(user: any) {
-    var data: ModalData = new ModalData();
+  onShow(geo: { lat: string; lng: string }): void {
     this.dialog.open(ModalComponent, {
-      data: { data },
+      height: '300px',
+      width: '300px',
+      data: {
+        lat: Number(geo.lat),
+        lon: Number(geo.lng),
+      },
     });
   }
 }
